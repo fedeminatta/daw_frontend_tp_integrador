@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, SimpleChanges, OnChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  SimpleChanges,
+  OnChanges,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClientesService } from '../../services/clientes.service';
@@ -15,10 +22,12 @@ export class ClientesAdminComponent implements OnInit, OnChanges {
   nuevoNombreCliente: string = '';
   listaClientes: any[] = [];
 
-  constructor(private readonly clientesService: ClientesService) {}
+  constructor(
+    private readonly clientesService: ClientesService,
+    private readonly cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit() {
-    // Si ya hay un token valido al iniciar cargamos
     if (localStorage.getItem('token')) {
       this.cargarClientes();
     }
@@ -38,6 +47,7 @@ export class ClientesAdminComponent implements OnInit, OnChanges {
           ...c,
           proyectos: c.proyectos || [],
         }));
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar clientes:', err);
