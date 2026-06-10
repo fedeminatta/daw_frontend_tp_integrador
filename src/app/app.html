@@ -4,176 +4,25 @@
     <p class="lead">Prototipo del Frontend conectado al contrato de la API</p>
   </div>
 
-  <section class="mb-5 p-4 border rounded shadow-sm bg-light">
-    <h2 class="text-primary mb-3">🔑 1. Sección: Formulario de Login</h2>
-    <p class="text-muted small">Ruta Backend: <code>POST /usuarios/login</code></p>
-    
-    @if (!usuarioLogueado) {
-      <div class="row g-3 align-items-center" style="max-width: 600px;">
-        <div class="col-sm-5">
-          <input type="text" [(ngModel)]="nombreUsuarioInput" class="form-control" placeholder="Nombre de Usuario (admin)">
-        </div>
-        <div class="col-sm-5">
-          <input type="password" [(ngModel)]="claveInput" class="form-control" placeholder="Contraseña (admin123)">
-        </div>
-        <div class="col-sm-2">
-          <button (click)="ejecutarLogin()" class="btn btn-primary w-100">Ingresar</button>
-        </div>
-      </div>
-    } @else {
-      <div class="alert alert-success">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <span><strong>¡Bienvenido, {{ usuarioActual.nombreUsuario }}!</strong> Tu estado es: <span class="badge bg-success">{{ usuarioActual.estado }}</span></span>
-          <button (click)="cerrarSesion()" class="btn btn-sm btn-outline-danger">Cerrar Sesión</button>
-        </div>
-        <div class="bg-dark text-warning p-2 rounded small text-break">
-          <strong>🔑 Token JWT recibido (Guardado en LocalStorage):</strong><br>
-          <code>{{ tokenUsuario }}</code>
-        </div>
-      </div>
-    }
-    
-    @if (mensajeLogin) {
-      <div class="mt-2 text-danger small"><strong>Resultado:</strong> {{ mensajeLogin }}</div>
-    }
-  </section>
-
-  <section class="mb-5 p-4 border rounded shadow-sm bg-white">
-    <h2 class="text-success mb-3">👥 2. Sección: Gestión de Clientes</h2>
-    <p class="text-muted small">Rutas Backend: <code>GET /clientes</code> \| <code>POST /clientes</code> \| <code>PATCH /clientes/:id/baja</code></p>
-
-    <div class="row g-3 mb-4" style="max-width: 500px;">
-      <div class="col-8">
-        <input type="text" [(ngModel)]="nuevoNombreCliente" class="form-control" placeholder="Nombre del nuevo cliente">
-      </div>
-      <div class="col-4">
-        <button (click)="agregarCliente()" class="btn btn-success w-100">Crear Cliente</button>
-      </div>
+  @if (!usuarioLogueado) {
+  <app-login-form (loginExitoso)="alLoguearse($event)"></app-login-form>
+  } @else {
+  <div class="alert alert-success mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <span><strong>¡Bienvenido, {{ usuarioActual.nombreUsuario }}!</strong> Tu
+        estado es: <span class="badge bg-success">{{ usuarioActual.estado
+          }}</span></span>
+      <button (click)="cerrarSesion()"
+        class="btn btn-sm btn-outline-danger">Cerrar Sesión</button>
     </div>
-
-    <table class="table table-hover border">
-      <thead class="table-light">
-        <tr>
-          <th>ID</th>
-          <th>Nombre del Cliente</th>
-          <th>Estado</th>
-          <th>Proyectos Activos</th>
-          <th>Acción</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (cliente of listaClientes; track cliente.id) {
-          <tr>
-            <td><code>{{ cliente.id }}</code></td>
-            <td><strong>{{ cliente.nombre }}</strong></td>
-            <td>
-              <span class="badge" [class.bg-success]="cliente.estado === 'Activo'" [class.bg-danger]="cliente.estado === 'Baja'">
-                {{ cliente.estado }}
-              </span>
-            </td>
-            <td>{{ cliente.proyectos.length }}</td>
-            <td>
-              <button 
-                (click)="darBajaCliente(cliente)" 
-                class="btn btn-sm btn-danger" 
-                [disabled]="cliente.proyectos.length > 0 || cliente.estado === 'Baja'">
-                Dar de Baja
-              </button>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-    <p class="text-warning small">⚠️ <em>Nota del Front: El botón de baja se bloquea automáticamente si el cliente tiene proyectos asignados, evitando el error 400 del Backend.</em></p>
-  </section>
-
-  <section class="mb-5 p-4 border rounded shadow-sm bg-light">
-    <h2 class="text-info mb-3">📁 3. Sección: Gestión de Proyectos</h2>
-    <p class="text-muted small">Rutas Backend: <code>GET /proyectos</code> \| <code>POST /proyectos</code></p>
-
-    <div class="card p-3 mb-4 bg-white border-0 shadow-sm">
-      <h5 class="text-secondary mb-3">Registrar Nuevo Proyecto</h5>
-      <div class="row g-3">
-        <div class="col-md-5">
-          <input type="text" [(ngModel)]="nuevoNombreProyecto" class="form-control" placeholder="Nombre del Proyecto (ej: Sistema de Stock)">
-        </div>
-        <div class="col-md-5">
-          <select [(ngModel)]="clienteSeleccionadoId" class="form-select">
-            <option value="">-- Proyecto Interno (Ningún Cliente) --</option>
-            @for (cliente of listaClientes; track cliente.id) {
-              @if (cliente.estado === 'Activo') {
-                <option [value]="cliente.id">{{ cliente.nombre }}</option>
-              }
-            }
-          </select>
-        </div>
-        <div class="col-md-2">
-          <button (click)="agregarProyecto()" class="btn btn-info text-white w-100">Crear</button>
-        </div>
-      </div>
+    <div class="bg-dark text-warning p-2 rounded small text-break">
+      <strong>🔑 Token JWT recibido (Guardado en LocalStorage):</strong><br>
+      <code>{{ tokenUsuario }}</code>
     </div>
+  </div>
 
-    <div class="row">
-      @for (proyecto of listaProyectos; track proyecto.id) {
-        <div class="col-md-6 mb-3">
-          <div class="card h-100 border-start border-info border-3 shadow-sm">
-            <div class="card-body d-flex flex-column justify-content-between">
-              <div>
-                <h5 class="card-title text-dark">{{ proyecto.nombre }}</h5>
-                <p class="card-text mb-2">
-                  <span class="text-muted">Cliente:</span> 
-                  <span class="badge rounded-pill" [class.bg-secondary]="proyecto.clienteId === null" [class.bg-primary]="proyecto.clienteId !== null">
-                    {{ proyecto.clienteNombre }}
-                  </span>
-                </p>
-                <small class="text-muted d-block mb-3">Tareas cargadas: {{ proyecto.tareas.length }}</small>
-              </div>
-              <button (click)="seleccionarProyecto(proyecto)" class="btn btn-sm btn-outline-info w-100 mt-2">
-                📂 Administrar Tareas de este Proyecto
-              </button>
-            </div>
-          </div>
-        </div>
-      }
-    </div>
-  </section>
+  <app-clientes-admin><app-clientes-admin
+      [token]="tokenUsuario"></app-clientes-admin></app-clientes-admin>
 
-  <section class="p-4 border rounded shadow-sm bg-white" id="seccion-tareas">
-    <h2 class="text-warning mb-3">📝 4. Sección: Detalle de Proyecto y Tareas</h2>
-    <p class="text-muted small">Rutas Backend: <code>POST /tareas</code> \| <code>DELETE /tareas/:id</code></p>
-
-    @if (proyectoSeleccionado) {
-      <div class="p-4 bg-warning bg-opacity-10 rounded border border-warning">
-        <h4>📋 Viendo Tareas de: <span class="text-primary">{{ proyectoSeleccionado.nombre }}</span></h4>
-        <p class="text-muted">Asociado a: <strong>{{ proyectoSeleccionado.clienteNombre }}</strong></p>
-
-        <div class="row g-2 mb-4" style="max-width: 600px;">
-          <div class="col-8">
-            <input type="text" [(ngModel)]="nuevaDescripcionTarea" class="form-control" placeholder="Nueva tarea (ej: Diseñar base de datos)">
-          </div>
-          <div class="col-4">
-            <button (click)="agregarTarea()" class="btn btn-warning w-100">➕ Agregar Tarea</button>
-          </div>
-        </div>
-
-        <h6 class="text-secondary fw-bold">Tareas actuales en el Backend:</h6>
-        @if (proyectoSeleccionado.tareas.length === 0) {
-          <p class="text-muted small italic">Este proyecto aún no tiene tareas creadas.</p>
-        } @else {
-          <ul class="list-group" style="max-width: 600px;">
-            @for (tarea of proyectoSeleccionado.tareas; track tarea; let i = $index) {
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>⬜ {{ tarea }}</span>
-                <button (click)="eliminarTarea(i)" class="btn btn-sm btn-link text-danger p-0">Eliminar</button>
-              </li>
-            }
-          </ul>
-        }
-      </div>
-    } @else {
-      <div class="alert alert-secondary text-center">
-        💡 Haz clic en el botón azul de cualquier proyecto arriba para abrir su panel de tareas y simular operaciones en tiempo real.
-      </div>
-    }
-  </section>
+  }
 </div>

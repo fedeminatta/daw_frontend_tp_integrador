@@ -1,0 +1,72 @@
+import { Component, Input, OnInit, SimpleChanges, OnChanges } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ClientesService } from '../../services/clientes.service';
+
+@Component({
+  selector: 'app-clientes-admin',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './clientes-admin.component.html',
+})
+export class ClientesAdminComponent implements OnInit, OnChanges {
+  // Recibir el token desde el componente padre para saber cuando cambio
+  @Input() token: string = '';
+  nuevoNombreCliente: string = '';
+  listaClientes: any[] = [];
+
+  constructor(private readonly clientesService: ClientesService) {}
+
+  ngOnInit() {
+    // Si ya hay un token valido al iniciar cargamos
+    if (localStorage.getItem('token')) {
+      this.cargarClientes();
+    }
+  }
+
+  // Detecta cuando el padre le pasa el nuevo token tras el login
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['token'] && changes['token'].currentValue) {
+      this.cargarClientes();
+    }
+  }
+
+  cargarClientes() {
+    this.clientesService.obtenerClientes().subscribe({
+      next: (data) => {
+        this.listaClientes = data.map((c) => ({
+          ...c,
+          proyectos: c.proyectos || [],
+        }));
+      },
+      error: (err) => {
+        console.error('Error al cargar clientes:', err);
+      },
+    });
+  }
+
+  agregarCliente() {
+    if (this.nuevoNombreCliente.trim() === '') return;
+
+    this.clientesService.crearCliente(this.nuevoNombreCliente).subscribe({
+      next: () => {
+        this.nuevoNombreCliente = '';
+        this.cargarClientes();
+      },
+      error: (err) => {
+        alert(err.error?.message || 'Error al crear cliente');
+      },
+    });
+  }
+
+  darBajaCliente(cliente: any) {
+    this.clientesService.darBajaCliente(cliente.id).subscribe({
+      next: () => {
+        this.cargarClientes();
+      },
+      error: (err) => {
+        alert(err.error?.message || 'Error al dar de baja');
+      },
+    });
+  }
+}

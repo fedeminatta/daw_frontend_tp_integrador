@@ -1,0 +1,53 @@
+<section class="mb-5 p-4 border rounded shadow-sm bg-white">
+  <h2 class="text-success mb-3">👥 2. Sección: Gestión de Clientes</h2>
+  <p class="text-muted small">Rutas Backend Reales: <code>GET /clientes</code> |
+    <code>POST /clientes</code> | <code>PATCH /clientes/:id/baja</code></p>
+
+  <div class="row g-3 mb-4" style="max-width: 500px;">
+    <div class="col-8">
+      <input type="text" [(ngModel)]="nuevoNombreCliente" class="form-control"
+        placeholder="Nombre del nuevo cliente">
+    </div>
+    <div class="col-4">
+      <button (click)="agregarCliente()" class="btn btn-success w-100">Crear
+        Cliente</button>
+    </div>
+  </div>
+
+  <table class="table table-hover border">
+    <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>Nombre del Cliente</th>
+        <th>Estado</th>
+        <th>Proyectos Activos</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (cliente of listaClientes; track cliente.id) {
+      <tr>
+        <td><code>{{ cliente.id }}</code></td>
+        <td><strong>{{ cliente.nombre }}</strong></td>
+        <td>
+          <span class="badge" [class.bg-success]="cliente.estado === 'Activo'"
+            [class.bg-danger]="cliente.estado === 'Baja'">
+            {{ cliente.estado }}
+          </span>
+        </td>
+        <td>{{ cliente.proyectos.length }}</td>
+        <td>
+          <button (click)="darBajaCliente(cliente)"
+            class="btn btn-sm btn-danger"
+            [disabled]="cliente.proyectos.length > 0 || cliente.estado === 'Baja'">
+            Dar de Baja
+          </button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  <p class="text-warning small">⚠️ <em>Nota del Front: El botón de baja se
+      bloquea automáticamente si el cliente tiene proyectos asignados, evitando
+      el error 400 del Backend.</em></p>
+</section>
