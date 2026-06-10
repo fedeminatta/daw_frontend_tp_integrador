@@ -3,20 +3,20 @@
   <p class="text-muted small">Ruta Backend Real:
     <code>POST /usuarios/login</code></p>
 
-  <div class="row g-3 align-items-center" style="max-width: 600px;">
+  <form (ngSubmit)="ejecutarLogin()" class="row g-3 align-items-center"
+    style="max-width: 600px;">
     <div class="col-sm-5">
-      <input type="text" [(ngModel)]="nombreUsuarioInput" class="form-control"
-        placeholder="Nombre de Usuario (admin)">
+      <input type="text" [(ngModel)]="nombreUsuarioInput" name="usuario"
+        class="form-control" placeholder="Nombre de Usuario (admin)">
     </div>
     <div class="col-sm-5">
-      <input type="password" [(ngModel)]="claveInput" class="form-control"
-        placeholder="Contraseña (admin123)">
+      <input type="password" [(ngModel)]="claveInput" name="clave"
+        class="form-control" placeholder="Contraseña (admin123)">
     </div>
     <div class="col-sm-2">
-      <button (click)="ejecutarLogin()"
-        class="btn btn-primary w-100">Ingresar</button>
+      <button type="submit" class="btn btn-primary w-100">Ingresar</button>
     </div>
-  </div>
+  </form>
 
   @if (mensajeLogin) {
   <div class="mt-2 text-danger small"><strong>Resultado:</strong> {{
