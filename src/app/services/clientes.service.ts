@@ -22,8 +22,12 @@ export class ClientesService {
     return this.http.get<any[]>(this.apiUrl, { headers: this.obtenerHeaders() });
   }
 
-  crearCliente(nombre: string): Observable<any> {
-    return this.http.post<any>(this.apiUrl, { nombre }, { headers: this.obtenerHeaders() });
+  crearCliente(nombre: string, email: string, telefono: string): Observable<any> {
+    return this.http.post<any>(
+      this.apiUrl, 
+      { nombre, email, telefono },
+      { headers: this.obtenerHeaders() }
+    );
   }
 
   darBajaCliente(id: string): Observable<any> {

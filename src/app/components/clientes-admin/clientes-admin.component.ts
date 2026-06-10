@@ -20,6 +20,8 @@ export class ClientesAdminComponent implements OnInit, OnChanges {
   // Recibir el token desde el componente padre para saber cuando cambio
   @Input() token: string = '';
   nuevoNombreCliente: string = '';
+  nuevoEmailCliente: string = '';    
+  nuevoTelefonoCliente: string = ''; 
   listaClientes: any[] = [];
 
   constructor(
@@ -33,7 +35,7 @@ export class ClientesAdminComponent implements OnInit, OnChanges {
     }
   }
 
-  // Detecta cuando el padre le pasa el nuevo token tras el login
+  
   ngOnChanges(changes: SimpleChanges) {
     if (changes['token'] && changes['token'].currentValue) {
       this.cargarClientes();
@@ -56,17 +58,24 @@ export class ClientesAdminComponent implements OnInit, OnChanges {
   }
 
   agregarCliente() {
+    
     if (this.nuevoNombreCliente.trim() === '') return;
 
-    this.clientesService.crearCliente(this.nuevoNombreCliente).subscribe({
-      next: () => {
-        this.nuevoNombreCliente = '';
-        this.cargarClientes();
-      },
-      error: (err) => {
-        alert(err.error?.message || 'Error al crear cliente');
-      },
-    });
+    
+    this.clientesService
+      .crearCliente(this.nuevoNombreCliente, this.nuevoEmailCliente, this.nuevoTelefonoCliente)
+      .subscribe({
+        next: () => {
+      
+          this.nuevoNombreCliente = '';
+          this.nuevoEmailCliente = '';
+          this.nuevoTelefonoCliente = '';
+          this.cargarClientes();
+        },
+        error: (err) => {
+          alert(err.error?.message || 'Error al crear cliente');
+        },
+      });
   }
 
   darBajaCliente(cliente: any) {

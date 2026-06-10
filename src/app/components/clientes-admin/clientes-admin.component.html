@@ -3,14 +3,21 @@
   <p class="text-muted small">Rutas Backend Reales: <code>GET /clientes</code> |
     <code>POST /clientes</code> | <code>PATCH /clientes/:id/baja</code></p>
 
-  <div class="row g-3 mb-4" style="max-width: 500px;">
-    <div class="col-8">
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
       <input type="text" [(ngModel)]="nuevoNombreCliente" class="form-control"
         placeholder="Nombre del nuevo cliente">
     </div>
-    <div class="col-4">
-      <button (click)="agregarCliente()" class="btn btn-success w-100">Crear
-        Cliente</button>
+    <div class="col-md-3">
+      <input type="email" [(ngModel)]="nuevoEmailCliente" class="form-control"
+        placeholder="Correo electrónico">
+    </div>
+    <div class="col-md-3">
+      <input type="text" [(ngModel)]="nuevoTelefonoCliente" class="form-control"
+        placeholder="Teléfono">
+    </div>
+    <div class="col-md-2">
+      <button (click)="agregarCliente()" class="btn btn-success w-100">Crear Cliente</button>
     </div>
   </div>
 
@@ -19,7 +26,7 @@
       <tr>
         <th>ID</th>
         <th>Nombre del Cliente</th>
-        <th>Estado</th>
+        <th>Email</th> <th>Teléfono</th> <th>Estado</th>
         <th>Proyectos Activos</th>
         <th>Acción</th>
       </tr>
@@ -29,17 +36,17 @@
       <tr>
         <td><code>{{ cliente.id }}</code></td>
         <td><strong>{{ cliente.nombre }}</strong></td>
-        <td>
+        <td>{{ cliente.email || '-' }}</td> <td>{{ cliente.telefono || '-' }}</td> <td>
           <span class="badge" [class.bg-success]="cliente.estado === 'Activo'"
             [class.bg-danger]="cliente.estado === 'Baja'">
             {{ cliente.estado }}
           </span>
         </td>
-        <td>{{ cliente.proyectos.length }}</td>
+        <td>{{ cliente.proyectos?.length || 0 }}</td>
         <td>
           <button (click)="darBajaCliente(cliente)"
             class="btn btn-sm btn-danger"
-            [disabled]="cliente.proyectos.length > 0 || cliente.estado === 'Baja'">
+            [disabled]="(cliente.proyectos?.length || 0) > 0 || cliente.estado === 'Baja'">
             Dar de Baja
           </button>
         </td>
