@@ -63,6 +63,19 @@ export class ProyectosAdminComponent implements OnInit {
     });
   }
 
+  // Eliminar proyecto de la base de datos
+  eliminarProyecto(id: string) {
+    if (!confirm('¿Seguro que deseas eliminar este proyecto?')) return;
+
+    this.proyectosService.eliminarProyecto(id).subscribe({
+      next: () => {
+        this.cargarDatos();
+        this.proyectoSeleccionado.emit(null); // Limpiar seccion de tareas en el padre
+      },
+      error: (err) => alert(err.error?.message || 'Error al eliminar proyecto'),
+    });
+  }
+
   // Emitir proyecto al componente padre
   seleccionarProyecto(proyecto: any) {
     this.proyectoSeleccionado.emit(proyecto);

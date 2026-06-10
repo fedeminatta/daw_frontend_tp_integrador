@@ -31,4 +31,9 @@ export class ProyectosService {
       { headers: this.obtenerHeaders() },
     );
   }
+
+  // Eliminar un proyecto por su ID
+  eliminarProyecto(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`, { headers: this.obtenerHeaders() });
+  }
 }
