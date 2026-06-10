@@ -1,1 +1,50 @@
-<p>tareas-admin works!</p>
+<section class="p-4 border rounded shadow-sm bg-white" id="seccion-tareas">
+  <h2 class="text-warning mb-3">📝 4. Sección: Detalle de Proyecto y Tareas</h2>
+  <p class="text-muted small">Rutas Backend Reales: <code>POST /tareas</code> |
+    <code>DELETE /tareas/:id</code>
+  </p>
+
+  @if (proyecto) {
+  <div class="p-4 bg-warning bg-opacity-10 rounded border border-warning">
+    <h4>📋 Viendo Tareas de: <span class="text-primary">{{ proyecto.nombre
+        }}</span></h4>
+    <p class="text-muted">Asociado a: <strong>{{ proyecto.cliente ?
+        proyecto.cliente.nombre : 'Proyecto Interno' }}</strong></p>
+
+    <form (ngSubmit)="agregarTarea()" class="row g-2 mb-4"
+      style="max-width: 600px;">
+      <div class="col-8">
+        <input type="text" [(ngModel)]="nuevaDescripcionTarea"
+          name="descripcion" class="form-control"
+          placeholder="Nueva tarea (ej: Diseñar base de datos)">
+      </div>
+      <div class="col-4">
+        <button type="submit" class="btn btn-warning w-100">➕ Agregar
+          Tarea</button>
+      </div>
+    </form>
+
+    <h6 class="text-secondary fw-bold">Tareas actuales en el Backend:</h6>
+    @if (listaTareas.length === 0) {
+    <p class="text-muted small italic">Este proyecto aún no tiene tareas
+      creadas.</p>
+    } @else {
+    <ul class="list-group" style="max-width: 600px;">
+      @for (tarea of listaTareas; track tarea.id) {
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center">
+        <span>⬜ {{ tarea.descripcion }}</span>
+        <button (click)="eliminarTarea(tarea.id)"
+          class="btn btn-sm btn-link text-danger p-0">Eliminar</button>
+      </li>
+      }
+    </ul>
+    }
+  </div>
+  } @else {
+  <div class="alert alert-secondary text-center">
+    💡 Haz clic en el botón azul de cualquier proyecto arriba para abrir su
+    panel de tareas y simular operaciones en tiempo real.
+  </div>
+  }
+</section>

@@ -25,5 +25,8 @@
       [token]="tokenUsuario"></app-clientes-admin></app-clientes-admin>
   <app-proyectos-admin
     (proyectoSeleccionado)="alSeleccionarProyecto($event)"></app-proyectos-admin>
+  <app-tareas-admin [proyecto]="proyectoSeleccionado"></app-tareas-admin>
+
+
   }
 </div>

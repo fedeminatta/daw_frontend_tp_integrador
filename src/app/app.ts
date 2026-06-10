@@ -4,12 +4,19 @@ import { AuthService } from './services/auth.service';
 import { LoginFormComponent } from './components/login-form/login-form.component';
 import { ClientesAdminComponent } from './components/clientes-admin/clientes-admin.component';
 import { ProyectosAdminComponent } from './components/proyectos-admin/proyectos-admin.component';
+import { TareasAdminComponent } from './components/tareas-admin/tareas-admin.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   // Incluir en el arreglo de imports
-  imports: [CommonModule, LoginFormComponent, ClientesAdminComponent, ProyectosAdminComponent],
+  imports: [
+    CommonModule,
+    LoginFormComponent,
+    ClientesAdminComponent,
+    ProyectosAdminComponent,
+    TareasAdminComponent,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -17,8 +24,6 @@ export class AppComponent implements OnInit {
   usuarioLogueado: boolean = false;
   usuarioActual: any = null;
   tokenUsuario: string = '';
-
-  // Mantener solo la referencia para la seccion de tareas
   proyectoSeleccionado: any = null;
 
   constructor(private readonly authService: AuthService) {}
@@ -45,7 +50,6 @@ export class AppComponent implements OnInit {
     this.proyectoSeleccionado = null;
   }
 
-  // Recibir proyecto seleccionado desde el componente hijo
   alSeleccionarProyecto(proyecto: any) {
     this.proyectoSeleccionado = proyecto;
   }
