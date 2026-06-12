@@ -65,4 +65,28 @@ export class TareasAdminComponent implements OnChanges {
       error: (err) => alert(err.error?.message || 'Error al eliminar tarea'),
     });
   }
+
+  // Habilitar modo edicion en una tarea especifica
+  activarEdicion(tarea: any) {
+    tarea.enEdicion = true;
+    tarea.descripcionEditada = tarea.descripcion;
+  }
+
+  // Cancelar la edicion de la tarea
+  cancelarEdicion(tarea: any) {
+    tarea.enEdicion = false;
+  }
+
+  // Guardar la nueva descripcion en el backend
+  guardarEdicion(tarea: any) {
+    if (!tarea.descripcionEditada || tarea.descripcionEditada.trim() === '') return;
+
+    this.tareasService.actualizarTarea(tarea.id, tarea.descripcionEditada).subscribe({
+      next: () => {
+        tarea.enEdicion = false;
+        this.actualizarLista();
+      },
+      error: (err) => alert(err.error?.message || 'Error al actualizar tarea'),
+    });
+  }
 }

@@ -80,4 +80,29 @@ export class ProyectosAdminComponent implements OnInit {
   seleccionarProyecto(proyecto: any) {
     this.proyectoSeleccionado.emit(proyecto);
   }
+
+  // Habilitar el modo edicion en un proyecto especifico
+  activarEdicion(proyecto: any) {
+    proyecto.enEdicion = true;
+    proyecto.nombreEditado = proyecto.nombre;
+  }
+
+  // Cancelar la edicion
+  cancelarEdicion(proyecto: any) {
+    proyecto.enEdicion = false;
+  }
+
+  // Guardar los cambios del proyecto en el backend
+  guardarEdicion(proyecto: any) {
+    if (!proyecto.nombreEditado || proyecto.nombreEditado.trim() === '') return;
+
+    this.proyectosService.actualizarProyecto(proyecto.id, proyecto.nombreEditado).subscribe({
+      next: () => {
+        proyecto.enEdicion = false;
+        this.cargarDatos();
+        this.proyectoSeleccionado.emit(null); // Resetear seccion tareas para evitar desincronizacion
+      },
+      error: (err) => alert(err.error?.message || 'Error al actualizar proyecto'),
+    });
+  }
 }

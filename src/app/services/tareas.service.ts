@@ -31,4 +31,13 @@ export class TareasService {
   eliminarTarea(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`, { headers: this.obtenerHeaders() });
   }
+
+  // Actualizar la descripcion de una tarea por su ID
+  actualizarTarea(id: string, descripcion: string): Observable<any> {
+    return this.http.patch<any>(
+      `${this.apiUrl}/${id}`,
+      { descripcion },
+      { headers: this.obtenerHeaders() },
+    );
+  }
 }

@@ -36,4 +36,13 @@ export class ProyectosService {
   eliminarProyecto(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`, { headers: this.obtenerHeaders() });
   }
+
+  // Actualizar un proyecto por su ID
+  actualizarProyecto(id: string, nombre: string): Observable<any> {
+    return this.http.patch<any>(
+      `${this.apiUrl}/${id}`,
+      { nombre },
+      { headers: this.obtenerHeaders() },
+    );
+  }
 }

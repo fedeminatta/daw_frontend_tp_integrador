@@ -33,9 +33,24 @@
       @for (tarea of listaTareas; track tarea.id) {
       <li
         class="list-group-item d-flex justify-content-between align-items-center">
+        @if (!tarea.enEdicion) {
         <span>⬜ {{ tarea.descripcion }}</span>
-        <button (click)="eliminarTarea(tarea.id)"
-          class="btn btn-sm btn-link text-danger p-0">Eliminar</button>
+        <div class="d-flex gap-2">
+          <button (click)="activarEdicion(tarea)"
+            class="btn btn-sm btn-link text-warning p-0">Editar</button>
+          <button (click)="eliminarTarea(tarea.id)"
+            class="btn btn-sm btn-link text-danger p-0">Eliminar</button>
+        </div>
+        } @else {
+        <div class="input-group input-group-sm">
+          <input type="text" [(ngModel)]="tarea.descripcionEditada"
+            class="form-control">
+          <button (click)="guardarEdicion(tarea)"
+            class="btn btn-success">Guardar</button>
+          <button (click)="cancelarEdicion(tarea)"
+            class="btn btn-secondary">Cancelar</button>
+        </div>
+        }
       </li>
       }
     </ul>
