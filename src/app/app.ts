@@ -5,6 +5,7 @@ import { LoginFormComponent } from './components/login-form/login-form.component
 import { ClientesAdminComponent } from './components/clientes-admin/clientes-admin.component';
 import { ProyectosAdminComponent } from './components/proyectos-admin/proyectos-admin.component';
 import { TareasAdminComponent } from './components/tareas-admin/tareas-admin.component';
+import { DashboardAdminComponent } from './components/dashboard-admin/dashboard-admin.component'
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ import { TareasAdminComponent } from './components/tareas-admin/tareas-admin.com
     ClientesAdminComponent,
     ProyectosAdminComponent,
     TareasAdminComponent,
+    DashboardAdminComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',

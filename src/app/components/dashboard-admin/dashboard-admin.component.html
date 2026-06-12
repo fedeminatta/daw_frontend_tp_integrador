@@ -1,0 +1,77 @@
+<section class="mb-5 p-4 border rounded shadow-sm bg-white">
+  <h2 class="text-primary mb-3">1. Sección: Panel de Estadísticas Globales</h2>
+  <p class="text-muted small">Ruta Backend Real: <code>GET /dashboard/stats</code></p>
+
+  <div *ngIf="cargando" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando métricas...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    No se pudieron sincronizar las estadísticas. Asegúrate de que el backend de NestJS esté corriendo en el puerto 3000.
+  </div>
+
+  <div *ngIf="stats" class="row g-4">
+    
+    <div class="col-md-3">
+      <div class="card h-100 bg-light border-0 shadow-sm">
+        <div class="card-body">
+          <h6 class="text-muted text-uppercase small fw-bold"> Proyectos</h6>
+          <h3 class="text-dark fw-bold mb-2">{{ stats.proyectos.total }}</h3>
+          <div class="small">
+            <span class="text-success">● Activos: {{ stats.proyectos.activos }}</span><br>
+            <span class="text-secondary">● Finalizados: {{ stats.proyectos.finalizados }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card h-100 bg-light border-0 shadow-sm">
+        <div class="card-body">
+          <h6 class="text-muted text-uppercase small fw-bold"> Clientes</h6>
+          <h3 class="text-success fw-bold mb-2">{{ stats.clientes.total }}</h3>
+          <div class="small">
+            <span class="text-success">● Activos: {{ stats.clientes.activos }}</span><br>
+            <span class="text-danger">● Bajas: {{ stats.clientes.bajas }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card h-100 bg-light border-0 shadow-sm">
+        <div class="card-body">
+          <h6 class="text-muted text-uppercase small fw-bold"> Tareas</h6>
+          <h3 class="text-warning fw-bold mb-2">{{ stats.tareas.total }}</h3>
+          <div class="small">
+            <span class="text-warning">● Pendientes: {{ stats.tareas.pendientes }}</span><br>
+            <span class="text-success">● Finalizadas: {{ stats.tareas.finalizadas }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card h-100 text-white bg-dark border-0 shadow-sm">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <div>
+            <h6 class="text-light-50 text-uppercase small fw-bold text-muted"> Rendimiento Total</h6>
+            <h3 class="text-warning fw-bold mb-0">{{ stats.tareas.rendimientoPorcentaje }}%</h3>
+          </div>
+          <div class="progress mt-3" style="height: 8px;">
+            <div class="progress-bar bg-warning" 
+                 role="progressbar" 
+                 [style.width.%]="stats.tareas.rendimientoPorcentaje"
+                 [attr.aria-valuenow]="stats.tareas.rendimientoPorcentaje" 
+                 aria-valuemin="0" 
+                 aria-valuemax="100">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
