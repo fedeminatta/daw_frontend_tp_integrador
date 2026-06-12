@@ -28,7 +28,6 @@ export class ProyectosAdminComponent implements OnInit {
     this.cargarDatos();
   }
 
-  // Cargar datos iniciales de la API
   cargarDatos() {
     this.proyectosService.obtenerProyectos().subscribe({
       next: (data) => {
@@ -47,7 +46,6 @@ export class ProyectosAdminComponent implements OnInit {
     });
   }
 
-  // Guardar nuevo proyecto
   agregarProyecto() {
     if (this.nuevoNombreProyecto.trim() === '') return;
 
@@ -63,7 +61,6 @@ export class ProyectosAdminComponent implements OnInit {
     });
   }
 
-  // Eliminar proyecto de la base de datos
   eliminarProyecto(id: string) {
     if (!confirm('¿Seguro que deseas eliminar este proyecto?')) return;
 
@@ -76,23 +73,19 @@ export class ProyectosAdminComponent implements OnInit {
     });
   }
 
-  // Emitir proyecto al componente padre
   seleccionarProyecto(proyecto: any) {
     this.proyectoSeleccionado.emit(proyecto);
   }
 
-  // Habilitar el modo edicion en un proyecto especifico
   activarEdicion(proyecto: any) {
     proyecto.enEdicion = true;
     proyecto.nombreEditado = proyecto.nombre;
   }
 
-  // Cancelar la edicion
   cancelarEdicion(proyecto: any) {
     proyecto.enEdicion = false;
   }
 
-  // Guardar los cambios del proyecto en el backend
   guardarEdicion(proyecto: any) {
     if (!proyecto.nombreEditado || proyecto.nombreEditado.trim() === '') return;
 
@@ -100,9 +93,78 @@ export class ProyectosAdminComponent implements OnInit {
       next: () => {
         proyecto.enEdicion = false;
         this.cargarDatos();
-        this.proyectoSeleccionado.emit(null); // Resetear seccion tareas para evitar desincronizacion
+        this.proyectoSeleccionado.emit(null);
       },
       error: (err) => alert(err.error?.message || 'Error al actualizar proyecto'),
     });
+  }
+
+  exportarReporteGeneralCSV() {
+    if (this.listaProyectos.length === 0) {
+      alert('No hay proyectos disponibles para exportar');
+      return;
+    }
+
+    const encabezados = [
+      'ID Cliente',
+      'Nombre Cliente',
+      'ID Proyecto',
+      'Nombre Proyecto',
+      'ID Tarea',
+      'Descripcion Tarea',
+    ];
+
+    const filas: string[][] = [];
+
+    // Recorrer los proyectos para cargar los datos
+    this.listaProyectos.forEach((proyecto) => {
+      const clienteId = proyecto.cliente?.id || 'N/A';
+      const clienteNombre = proyecto.cliente?.nombre
+        ? proyecto.cliente.nombre.replace(/,/g, ' ')
+        : 'Proyecto Interno';
+      const proyectoId = proyecto.id;
+      const proyectoNombre = proyecto.nombre ? proyecto.nombre.replace(/,/g, ' ') : '';
+
+      if (proyecto.tareas && proyecto.tareas.length > 0) {
+        proyecto.tareas.forEach((tarea: any) => {
+          filas.push([
+            clienteId,
+            clienteNombre,
+            proyectoId,
+            proyectoNombre,
+            tarea.id,
+            tarea.descripcion ? tarea.descripcion.replace(/,/g, ' ') : '',
+          ]);
+        });
+      } else {
+        // Si el proyecto no tiene tareas, crear una fila igual dejando los campos de tareas vacios
+        filas.push([
+          clienteId,
+          clienteNombre,
+          proyectoId,
+          proyectoNombre,
+          'S/T',
+          'Sin tareas asignadas',
+        ]);
+      }
+    });
+
+    // Unir encabezados y filas con BOM UTF-8 para que Excel reconozca los acentos correctamente
+    const contenidoCsv = [encabezados.join(','), ...filas.map((fila) => fila.join(','))].join('\n');
+
+    // El prefijo \uFEFF fuerza a Excel a leer el archivo en formato UTF-8 nativo
+    const blob = new Blob(['\uFEFF' + contenidoCsv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    // Crear enlace y descargar
+    const enlaceDescarga = document.createElement('a');
+    enlaceDescarga.href = url;
+    enlaceDescarga.setAttribute(
+      'download',
+      `reporte_general_proyectos_${new Date().toISOString().slice(0, 10)}.csv`,
+    );
+    document.body.appendChild(enlaceDescarga);
+    enlaceDescarga.click();
+    document.body.removeChild(enlaceDescarga);
   }
 }
