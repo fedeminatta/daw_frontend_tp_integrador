@@ -1,3 +1,4 @@
+import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -6,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ProyectosService {
-  private readonly apiUrl = 'http://localhost:3000/proyectos';
+  private readonly apiUrl = `${environment.apiUrl}/proyectos`;
 
   constructor(private readonly http: HttpClient) {}
 
