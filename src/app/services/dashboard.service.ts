@@ -1,3 +1,4 @@
+import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -6,7 +7,7 @@ import { Observable } from 'rxjs';
     providedIn: 'root',
 })
 export class DashboardService {
-    private readonly apiUrl = 'http://localhost:3000/dashboard/stats';
+    private readonly apiUrl = `${environment.apiUrl}/dashboard/stats`;
 
     constructor(private readonly http: HttpClient) {}
         
