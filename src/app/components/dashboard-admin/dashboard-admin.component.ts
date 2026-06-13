@@ -21,7 +21,7 @@ export class DashboardAdminComponent implements OnInit {
     }
 
     cargarEstadisticas(): void {
-        this.dashboardService.obtenerEstadisiticas().subscribe({
+        this.dashboardService.obtenerEstadisticas().subscribe({
             next: (data) => {
                 this.stats = data;
                 this.cargando = false;
