@@ -18,7 +18,7 @@ export class DashboardService {
             });
         }
 
-        obtenerEstadisiticas(): Observable<any> {
+        obtenerEstadisticas(): Observable<any> {
             return this.http.get<any>(this.apiUrl, { headers: this.obtenerHeaders()});
         }
     }
