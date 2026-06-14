@@ -41,4 +41,12 @@ export class TareasService {
       { headers: this.obtenerHeaders() },
     );
   }
+
+  cambiarEstadoTarea(id: string, estado: string): Observable<any> { 
+    return this.http.patch<any>(
+      `${this.apiUrl}/${id}`,
+      { estado },
+      { headers: this.obtenerHeaders() }
+    );
+  }
 }
