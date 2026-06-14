@@ -89,4 +89,16 @@ export class TareasAdminComponent implements OnChanges {
       error: (err) => alert(err.error?.message || 'Error al actualizar tarea'),
     });
   }
+
+  //cambiar tipo de estado de la tarea
+  cambiarEstadoTarea(tarea: any, nuevoEstado: string) {
+    if (tarea.estado === nuevoEstado) return;
+    
+    this.tareasService.cambiarEstadoTarea(tarea.id, nuevoEstado).subscribe({
+      next: () => {
+        this.actualizarLista();
+      },
+      error: (err) => alert(err.error?.message || 'Error al cambiar estado de la tarea')
+    });
+  }
 }
